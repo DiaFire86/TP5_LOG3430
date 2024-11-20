@@ -29,18 +29,18 @@ class SimpleTasks(TaskSet):
 
 class SimpleUser(HttpUser):
     tasks = [SimpleTasks]
-    weight = 0.02
+    weight = 1
     wait_time = between(1, 5)  # Simulate a wait time between requests
 
 class HeavyUser(HttpUser):
     tasks = [SimpleTasks]
-    weight = 0.98
+    weight = 0
     wait_time = between(5, 10)
 
 class Shape(LoadTestShape):
-    users = 1000
+    users = 10000
     time_limit = 120
-    spawn_rate = 10
+    spawn_rate = 100
 
     def tick(self):
         run_time = self.get_run_time()
@@ -48,6 +48,6 @@ class Shape(LoadTestShape):
         if run_time < self.time_limit:
 
             user_count = self.users
-            tick_data = (user_count, self.spawn_rate, [SimpleUser, HeavyUser])
+            tick_data = (user_count, self.spawn_rate, [SimpleUser])
             return tick_data
 

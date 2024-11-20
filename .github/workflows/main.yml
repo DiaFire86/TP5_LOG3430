@@ -23,3 +23,10 @@ jobs:
           python server.py &
           echo "Waiting for Flask server to start"
           sleep 30
+      - name: Run Locust tests
+        run: |
+          locust -f .\locustfile.py --host http://127.0.0.1:5000 
+      - name: Stop Flask server
+        run: |
+          echo "Stopping Flask server"
+          pkill -f "python server.py"
