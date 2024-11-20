@@ -1,4 +1,4 @@
-from locust import HttpUser, TaskSet, task, between
+from locust import HttpUser, TaskSet, task, between, LoadTestShape
 
 class SimpleTasks(TaskSet):
     @task(1)
@@ -29,4 +29,25 @@ class SimpleTasks(TaskSet):
 
 class SimpleUser(HttpUser):
     tasks = [SimpleTasks]
+    weight = 0.02
     wait_time = between(1, 5)  # Simulate a wait time between requests
+
+class HeavyUser(HttpUser):
+    tasks = [SimpleTasks]
+    weight = 0.98
+    wait_time = between(5, 10)
+
+class Shape(LoadTestShape):
+    users = 1000
+    time_limit = 120
+    spawn_rate = 10
+
+    def tick(self):
+        run_time = self.get_run_time()
+
+        if run_time < self.time_limit:
+
+            user_count = self.users
+            tick_data = (user_count, self.spawn_rate, [SimpleUser, HeavyUser])
+            return tick_data
+
