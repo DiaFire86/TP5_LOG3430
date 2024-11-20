@@ -10,6 +10,8 @@ jobs:
     steps:
       - name: Check out the repository
         uses: actions/checkout@v2
+      - name: Check Python version
+        run: python --version
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
